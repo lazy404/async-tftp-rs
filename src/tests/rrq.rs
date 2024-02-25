@@ -12,7 +12,7 @@ use super::external_client::*;
 use super::handlers::*;
 use crate::server::TftpServerBuilder;
 
-fn transfer(file_size: usize, block_size: Option<u16>) {
+fn transfer(file_size: usize, block_size: Option<u16>, window_size: Option<u16>) {
     let ex = Arc::new(Executor::new());
     let transfered = Rc::new(Cell::new(false));
 
@@ -27,6 +27,7 @@ fn transfer(file_size: usize, block_size: Option<u16>) {
             // bind
             let tftpd = TftpServerBuilder::with_handler(handler)
                 .bind("127.0.0.1:0".parse().unwrap())
+                .window_size(window_size.unwrap_or(1))
                 .build()
                 .await
                 .unwrap();
@@ -35,7 +36,7 @@ fn transfer(file_size: usize, block_size: Option<u16>) {
             // start client
             let mut tftp_recv = Unblock::new(());
             let tftp_recv = tftp_recv.with_mut(move |_| {
-                external_tftp_recv("test", addr, block_size)
+                external_tftp_recv("test", addr, block_size, window_size)
             });
 
             // start server
@@ -113,7 +114,7 @@ fn transfer_more_than_32mb() {
 }
 
 #[test]
-#[ignore]
+// #[ignore]
 fn transfer_more_than_64mb() {
     transfer(65 * 1024 * 1024 + 123, None);
 }

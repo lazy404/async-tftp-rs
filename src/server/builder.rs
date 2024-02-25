@@ -18,6 +18,7 @@ pub struct TftpServerBuilder<H: Handler> {
     socket: Option<Async<UdpSocket>>,
     timeout: Duration,
     block_size_limit: Option<u16>,
+    window_size: Option<u16>,
     max_send_retries: u32,
     ignore_client_timeout: bool,
     ignore_client_block_size: bool,
@@ -63,6 +64,7 @@ impl<H: Handler> TftpServerBuilder<H> {
             socket: None,
             timeout: Duration::from_secs(3),
             block_size_limit: None,
+            window_size: None,
             max_send_retries: 100,
             ignore_client_timeout: false,
             ignore_client_block_size: false,
@@ -132,6 +134,19 @@ impl<H: Handler> TftpServerBuilder<H> {
         }
     }
 
+    /// Set maximum window size.
+    ///
+    /// Client can request a specific window size (RFC7440). Use this option if you
+    /// want to use it.
+    ///
+    /// Default: None, window scaling disabled
+    pub fn window_size(self, window_size: u16) -> Self {
+        TftpServerBuilder {
+            window_size: Some(window_size),
+            ..self
+        }
+    }
+
     /// Set maximum send retries for a data block.
     ///
     /// On timeout server will try to send the data block again. When retries are
@@ -178,6 +193,7 @@ impl<H: Handler> TftpServerBuilder<H> {
         let config = ServerConfig {
             timeout: self.timeout,
             block_size_limit: self.block_size_limit,
+            window_size: self.window_size,
             max_send_retries: self.max_send_retries,
             ignore_client_timeout: self.ignore_client_timeout,
             ignore_client_block_size: self.ignore_client_block_size,

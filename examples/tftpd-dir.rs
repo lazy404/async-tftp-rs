@@ -11,9 +11,10 @@ async fn main() -> Result<()> {
         .expect("Failed to initialize logger");
 
     let tftpd = TftpServerBuilder::with_dir_ro(".")?
-        .bind("0.0.0.0:6969".parse().unwrap())
+        .bind("192.168.7.244:6969".parse().unwrap())
         // Workaround to handle cases where client is behind VPN
         .block_size_limit(1024)
+        .window_size(64)
         .build()
         .await?;
 
