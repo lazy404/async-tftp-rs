@@ -61,60 +61,60 @@ fn transfer(file_size: usize, block_size: Option<u16>, window_size: Option<u16>)
 
 #[test]
 fn transfer_0_bytes() {
-    transfer(0, None);
-    transfer(0, Some(1024));
+    transfer(0, None, None);
+    transfer(0, Some(1024), None);
 }
 
 #[test]
 fn transfer_less_than_block() {
-    transfer(1, None);
-    transfer(123, None);
-    transfer(511, None);
-    transfer(1023, Some(1024));
+    transfer(1, None, None);
+    transfer(123, None, None);
+    transfer(511, None, None);
+    transfer(1023, Some(1024), None);
 }
 
 #[test]
 fn transfer_block() {
-    transfer(512, None);
-    transfer(1024, Some(1024));
+    transfer(512, None, None);
+    transfer(1024, Some(1024), None);
 }
 
 #[test]
 fn transfer_more_than_block() {
-    transfer(512 + 1, None);
-    transfer(512 + 123, None);
-    transfer(512 + 511, None);
-    transfer(1024 + 1, Some(1024));
-    transfer(1024 + 123, Some(1024));
-    transfer(1024 + 1023, Some(1024));
+    transfer(512 + 1, None, None);
+    transfer(512 + 123, None, None);
+    transfer(512 + 511, None, None);
+    transfer(1024 + 1, Some(1024), None);
+    transfer(1024 + 123, Some(1024), None);
+    transfer(1024 + 1023, Some(1024), None);
 }
 
 #[test]
 fn transfer_1mb() {
-    transfer(1024 * 1024, None);
-    transfer(1024 * 1024, Some(1024));
+    transfer(1024 * 1024, None, None);
+    transfer(1024 * 1024, Some(1024), None);
 }
 
 #[test]
 #[ignore]
 fn transfer_almost_32mb() {
-    transfer(32 * 1024 * 1024 - 1, None);
+    transfer(32 * 1024 * 1024 - 1, None, None);
 }
 
 #[test]
 #[ignore]
 fn transfer_32mb() {
-    transfer(32 * 1024 * 1024, None);
+    transfer(32 * 1024 * 1024, None, None);
 }
 
 #[test]
 #[ignore]
 fn transfer_more_than_32mb() {
-    transfer(33 * 1024 * 1024 + 123, None);
+    transfer(33 * 1024 * 1024 + 123, None, None);
 }
 
 #[test]
 // #[ignore]
 fn transfer_more_than_64mb() {
-    transfer(65 * 1024 * 1024 + 123, None);
+    transfer(65 * 1024 * 1024 + 123, None, None);
 }
